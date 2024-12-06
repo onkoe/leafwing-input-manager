@@ -728,7 +728,7 @@ impl Buttonlike for GamepadButton {
 mod tests {
     use super::*;
     use crate::plugin::CentralInputStorePlugin;
-    use bevy::input::gamepad::{GamepadConnection, GamepadConnectionEvent, GamepadInfo};
+    use bevy::input::gamepad::{GamepadConnection, GamepadConnectionEvent};
     use bevy::input::InputPlugin;
     use bevy::prelude::*;
 
@@ -739,11 +739,12 @@ mod tests {
 
         // WARNING: you MUST register your gamepad during tests,
         // or all gamepad input mocking actions will fail
-        let gamepad_info = GamepadInfo {
+        let mock_gamepad_connection: GamepadConnection = GamepadConnection::Connected {
             name: "TestController".into(),
             vendor_id: None,
             product_id: None,
         };
+
         let gamepad = app.world_mut().spawn(()).id();
         let mut gamepad_connection_events = app
             .world_mut()
@@ -751,7 +752,7 @@ mod tests {
         gamepad_connection_events.send(GamepadConnectionEvent {
             // This MUST be consistent with any other mocked events
             gamepad,
-            connection: GamepadConnection::Connected(gamepad_info),
+            connection: mock_gamepad_connection,
         });
 
         // Ensure that the gamepad is picked up by the appropriate system

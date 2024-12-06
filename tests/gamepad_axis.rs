@@ -1,8 +1,6 @@
 #![cfg(feature = "gamepad")]
 
-use bevy::input::gamepad::{
-    GamepadConnection, GamepadConnectionEvent, GamepadInfo, RawGamepadEvent,
-};
+use bevy::input::gamepad::{GamepadConnection, GamepadConnectionEvent, RawGamepadEvent};
 use bevy::input::InputPlugin;
 use bevy::prelude::*;
 use leafwing_input_manager::input_processing::{
@@ -37,11 +35,12 @@ fn test_app() -> App {
         .init_resource::<ActionState<AxislikeTestAction>>();
 
     // WARNING: you MUST register your gamepad during tests, or all gamepad input mocking will fail
-    let gamepad_info = GamepadInfo {
+    let mock_gamepad_connection = GamepadConnection::Connected {
         name: "TestController".into(),
         vendor_id: None,
         product_id: None,
     };
+
     let gamepad = app.world_mut().spawn(()).id();
     let mut gamepad_connection_events = app
         .world_mut()
@@ -49,7 +48,7 @@ fn test_app() -> App {
     gamepad_connection_events.send(GamepadConnectionEvent {
         // This MUST be consistent with any other mocked events
         gamepad,
-        connection: GamepadConnection::Connected(gamepad_info),
+        connection: mock_gamepad_connection,
     });
 
     // Ensure that the gamepad is picked up by the appropriate system
@@ -61,7 +60,6 @@ fn test_app() -> App {
 }
 
 #[test]
-#[ignore = "Broken upstream; tracked in https://github.com/Leafwing-Studios/leafwing-input-manager/issues/419"]
 fn gamepad_single_axis_mocking() {
     let mut app = test_app();
     let mut events = app.world_mut().resource_mut::<Events<RawGamepadEvent>>();
@@ -75,7 +73,6 @@ fn gamepad_single_axis_mocking() {
 }
 
 #[test]
-#[ignore = "Broken upstream; tracked in https://github.com/Leafwing-Studios/leafwing-input-manager/issues/419"]
 fn gamepad_dual_axis_mocking() {
     let mut app = test_app();
     let mut events = app.world_mut().resource_mut::<Events<RawGamepadEvent>>();

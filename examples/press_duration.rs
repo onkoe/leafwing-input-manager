@@ -39,7 +39,8 @@ struct PlayerBundle {
     player: Player,
     velocity: Velocity,
     input_manager: InputManagerBundle<Action>,
-    sprite: SpriteBundle,
+    sprite: Sprite,
+    transform: Transform,
 }
 
 impl PlayerBundle {
@@ -60,22 +61,19 @@ fn spawn_player(mut commands: Commands) {
         player: Player,
         velocity: Velocity { x: 0.0 },
         input_manager: InputManagerBundle::with_map(PlayerBundle::default_input_map()),
-        sprite: SpriteBundle {
-            transform: Transform {
-                scale: Vec3::new(40.0, 80.0, 0.0),
-                ..Default::default()
-            },
-            sprite: Sprite {
-                color: Color::srgb(0.5, 0.5, 1.0),
-                ..Default::default()
-            },
+        sprite: Sprite {
+            color: Color::srgb(0.5, 0.5, 1.0),
+            ..Default::default()
+        },
+        transform: Transform {
+            scale: Vec3::new(40.0, 80.0, 0.0),
             ..Default::default()
         },
     });
 }
 
 fn spawn_camera(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d::default());
 }
 
 /// The longer you hold, the faster you dash when released!
@@ -97,7 +95,7 @@ fn hold_dash(mut player_query: Query<(&ActionState<Action>, &mut Velocity), With
 
 fn apply_velocity(mut query: Query<(&mut Transform, &Velocity)>, time: Res<Time>) {
     for (mut transform, velocity) in query.iter_mut() {
-        transform.translation.x += velocity.x * time.delta_seconds();
+        transform.translation.x += velocity.x * time.delta_secs();
     }
 }
 
@@ -106,7 +104,7 @@ fn drag(mut query: Query<&mut Velocity>, time: Res<Time>) {
     for mut velocity in query.iter_mut() {
         // Reduce the velocity in proportion to its speed,
         // applied in the opposite direction as the object is moving.
-        velocity.x -= DRAG_COEFFICIENT * velocity.x * time.delta_seconds();
+        velocity.x -= DRAG_COEFFICIENT * velocity.x * time.delta_secs();
     }
 }
 

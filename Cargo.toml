@@ -45,10 +45,10 @@ egui = ['dep:bevy_egui']
 
 [dependencies]
 leafwing_input_manager_macros = { path = "macros", version = "0.15.1" }
-bevy = { version = "0.15.0-dev", default-features = false, features = [
+bevy = { version = "0.15.0", default-features = false, features = [
   "serialize",
 ] }
-bevy_egui = { version = "0.29", optional = true }
+bevy_egui = { version = "0.31.0", optional = true }
 
 derive_more = { version = "0.99", default-features = false, features = [
   "display",
@@ -63,7 +63,7 @@ dyn-hash = "0.2"
 once_cell = "1.19"
 
 [dev-dependencies]
-bevy = { version = "0.15.0-dev", default-features = false, features = [
+bevy = { version = "0.15.0", default-features = false, features = [
   "bevy_asset",
   "bevy_sprite",
   "bevy_text",
@@ -72,10 +72,7 @@ bevy = { version = "0.15.0-dev", default-features = false, features = [
   "bevy_core_pipeline",
   "bevy_state",
   "x11",
-  # TODO Remove these before release. See https://github.com/bevyengine/bevy/issues/13728
-  "ktx2",
-  "zstd",
-  "bevy_pbr",
+  "bevy_window",
 ] }
 serde_test = "1.0"
 
